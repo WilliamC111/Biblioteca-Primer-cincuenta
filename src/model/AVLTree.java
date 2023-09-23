@@ -123,56 +123,69 @@ public class AVLTree<T extends Comparable<T>> {
 
         return node;
     }
-    public void delete(T data) {
-        root = delete(root, data);
+   
+    public void deleteByISBNAndHeadquarters(String isbn, String headquarters) {
+        root = deleteByISBNAndHeadquarters(root, isbn, headquarters);
     }
-    private AVLNode<T> delete(AVLNode<T> root, T data) {
-        if (root == null)
-            return root;
-
-        if (data.compareTo(root.data) < 0)
-            root.left = delete(root.left, data);
-        else if (data.compareTo(root.data) > 0)
-            root.right = delete(root.right, data);
-        else {
-            if (root.left == null || root.right == null) {
-                AVLNode<T> temp = (root.left != null) ? root.left : root.right;
-                if (temp == null)
-                    temp = root;
-
-                root = temp;
+    
+    private AVLNode<T> deleteByISBNAndHeadquarters(AVLNode<T> node, String isbn, String headquarters) {
+        if (node == null)
+            return node;
+    
+        // Realizar comparaciones para determinar si el libro debe eliminarse
+        Book book = (Book) node.data; // Accede al libro almacenado en el nodo
+        int cmpIsbn = isbn.compareTo(book.getIsbn());
+        int cmpHeadquarters = headquarters.compareTo(book.getHeadquarters().getHeadquartersName());
+    
+        if (cmpIsbn < 0) {
+            node.left = deleteByISBNAndHeadquarters(node.left, isbn, headquarters);
+        } else if (cmpIsbn > 0) {
+            node.right = deleteByISBNAndHeadquarters(node.right, isbn, headquarters);
+        } else {
+            // El ISBN coincide, ahora verifica la sede
+            if (cmpHeadquarters < 0) {
+                node.left = deleteByISBNAndHeadquarters(node.left, isbn, headquarters);
+            } else if (cmpHeadquarters > 0) {
+                node.right = deleteByISBNAndHeadquarters(node.right, isbn, headquarters);
             } else {
-                AVLNode<T> successor = findMin(root.right);
-                root.data = successor.data;
-                root.right = delete(root.right, successor.data);
+                // Encontrado el libro con el ISBN y la sede correctos, procede a eliminarlo
+                if (node.left == null || node.right == null) {
+                    AVLNode<T> temp = (node.left != null) ? node.left : node.right;
+                    if (temp == null)
+                        temp = node;
+                    return temp;
+                } else {
+                    AVLNode<T> successor = findMin(node.right);
+                    book = (Book) successor.data; // Accede al libro sucesor
+                    node.data = successor.data;
+                    node.right = deleteByISBNAndHeadquarters(node.right, book.getIsbn(), headquarters);
+                }
             }
         }
-        if (root == null)
-            return root;
-        root.height = Math.max(height(root.left), height(root.right)) + 1;
-
-        int balance = getBalance(root);
-
+    
+        // Actualizar la altura y equilibrar el árbol como en otros métodos de eliminación
+        node.height = Math.max(height(node.left), height(node.right)) + 1;
+        int balance = getBalance(node);
         if (balance > 1) {
-            if (getBalance(root.left) >= 0)
-                return rightRotate(root);
+            if (getBalance(node.left) >= 0)
+                return rightRotate(node);
             else {
-                root.left = leftRotate(root.left);
-                return rightRotate(root);
+                node.left = leftRotate(node.left);
+                return rightRotate(node);
             }
         }
-
         if (balance < -1) {
-            if (getBalance(root.right) <= 0)
-                return leftRotate(root);
+            if (getBalance(node.right) <= 0)
+                return leftRotate(node);
             else {
-                root.right = rightRotate(root.right);
-                return leftRotate(root);
+                node.right = rightRotate(node.right);
+                return leftRotate(node);
             }
         }
-
-        return root;
+    
+        return node;
     }
+    
 
     private AVLNode<T> findMin(AVLNode<T> node) {
         while (node.left != null)
@@ -195,5 +208,20 @@ public class AVLTree<T extends Comparable<T>> {
         else
             return node.data;
     }
+    public List<Book> listbooks() {
+        List<Book> books = new ArrayList<>();
+        inOrderTraversal(root,books);
+        return books;
+    }
 
+  
+
+    private void inOrderTraversal(AVLNode<T> node,List<Book> books ) {
+        if (node != null) {
+            inOrderTraversal(node.left,books); // Visitar el subárbol izquierdo
+            books.add((Book)node.data);
+             // Imprimir el libro
+            inOrderTraversal(node.right,books); // Visitar el subárbol derecho
+        }
+    }
 }

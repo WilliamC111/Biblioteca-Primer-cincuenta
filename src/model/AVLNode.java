@@ -10,4 +10,7 @@ package model;
             this.left = null;
             this.right = null;
         }
+
+        
+
     }
