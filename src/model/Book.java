@@ -10,7 +10,7 @@ public class Book implements Comparable<Book> {
     private Headquarters headquarters;
     private Author author;
 
-    public Book(String title, int i, String isbn, String volume, String editorial, Headquarters headquarters, Author author) {
+    public Book(String title, String isbn, String volume, String editorial, Headquarters headquarters, Author author) {
         this.title = title;
         this.isbn = isbn;
         this.volume = volume;
