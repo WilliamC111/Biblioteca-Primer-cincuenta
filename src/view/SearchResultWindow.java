@@ -10,6 +10,7 @@ import model.Book;
 
 public class SearchResultWindow extends JFrame {
     private JTextArea resultArea;
+    private JTextArea window;
 
     public SearchResultWindow(String title) {
         setTitle(title);
@@ -36,5 +37,8 @@ public class SearchResultWindow extends JFrame {
             sb.append(book.toString()).append("\n");
         }
         resultArea.setText(sb.toString());
-    }    
+    }  
+    public void window(JTextArea window){
+        this.window = window;
+    }
 }
