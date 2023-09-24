@@ -24,7 +24,7 @@ public class Manager implements ActionListener {
     private AVLTree<Book> bookTree;
     private PrincipalWindow principal;
 
-    private static final String BOOKS_FILE_PATH = "Books.txt";
+    private static final String BOOKS_FILE_PATH = "src\\resources\\Books.txt";
 
     public Manager() {
         createTree();
