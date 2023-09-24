@@ -25,4 +25,6 @@ public class SearchResultWindow extends JFrame {
     public void displayResults(String results) {
         resultArea.setText(results);
     }
+    public void displayResults(List<Book> foundBooks) {
+}
 }
