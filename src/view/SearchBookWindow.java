@@ -10,7 +10,7 @@ public class SearchBookWindow extends JFrame {
         setTitle("Search Book");
         setSize(650, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setContentPane(new JLabel(new ImageIcon("img/1.jpg"))); // Reemplaza "ruta_de_la_imagen" con la ruta de tu imagen de fondo
+        setContentPane(new JLabel(new ImageIcon("img/1.jpg"))); 
         setLayout(new FlowLayout());
 
 
