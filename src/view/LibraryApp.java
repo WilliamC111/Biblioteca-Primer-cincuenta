@@ -16,7 +16,7 @@ public class LibraryApp extends JFrame {
         setTitle("Library");
         setSize(500, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setContentPane(new JLabel(new ImageIcon("img/Fondo.jpg"))); // Reemplaza "ruta_de_la_imagen" con la ruta de tu imagen de fondo
+        setContentPane(new JLabel(new ImageIcon("img/Fondo.jpg"))); 
         setLayout(new FlowLayout());
 
 
