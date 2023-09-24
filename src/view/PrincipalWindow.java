@@ -23,6 +23,8 @@ public class PrincipalWindow extends JFrame {
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         contentPane.setLayout(null);
+       setContentPane(new JLabel(new ImageIcon("img/Fondo.jpg"))); 
+
 
         ModifyPanel panel = new ModifyPanel();
         panel.setDirectionImg("/resources/Biblioteca.jpg");
@@ -105,6 +107,16 @@ public class PrincipalWindow extends JFrame {
 
     public JComboBox<String> getComboBox() {
         return comboBox;
+    }
+    
+     private JButton createStyledButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("Arial", Font.PLAIN, 16));
+        button.setFocusPainted(false);
+        button.setBackground(new Color(51, 102, 153));
+        button.setForeground(Color.WHITE);
+        button.setPreferredSize(new Dimension(150, 40));
+        return button;
     }
 
     public void updateLabelText(String text) {
