@@ -29,6 +29,7 @@ public class SearchResultWindow extends JFrame {
     public void displayResults(String results) {
         resultArea.setText(results);
     }
+<<<<<<< HEAD
 
     public void displayResults(List<Book> foundBooks) {
         StringBuilder sb = new StringBuilder();
@@ -37,4 +38,8 @@ public class SearchResultWindow extends JFrame {
         }
         resultArea.setText(sb.toString());
     }    
+=======
+    public void displayResults(List<Book> foundBooks) {
+}
+>>>>>>> 57f6715a3b56b98422ea5ed839e42af4fe9f3b88
 }
