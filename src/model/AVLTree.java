@@ -195,5 +195,16 @@ public class AVLTree<T extends Comparable<T>> {
         else
             return node.data;
     }
+public void inOrderTraversal(Consumer<Book> consumer) {
+    inOrderTraversal(root, consumer);
+}
 
+private void inOrderTraversal(AVLNode<T> node, Consumer<Book> consumer) {
+    if (node == null)
+        return;
+
+    inOrderTraversal(node.left, consumer);
+    consumer.accept((Book) node.data);
+    inOrderTraversal(node.right, consumer);
+}
 }
