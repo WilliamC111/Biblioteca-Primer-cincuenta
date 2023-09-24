@@ -207,4 +207,27 @@ private void inOrderTraversal(AVLNode<T> node, Consumer<Book> consumer) {
     consumer.accept((Book) node.data);
     inOrderTraversal(node.right, consumer);
 }
+public List<Book> listBooksByHeadquarters(String headquartersName) {
+    List<Book> books = new ArrayList<>();
+    listBooksByHeadquarters(root, headquartersName, books);
+    return books;
+}
+
+private void listBooksByHeadquarters(AVLNode<T> node, String headquartersName, List<Book> books) {
+    if (node != null) {
+        Book book = (Book) node.data;
+        int cmp = headquartersName.compareTo(book.getHeadquarters().getHeadquartersName());
+
+        if (cmp < 0) {
+            listBooksByHeadquarters(node.left, headquartersName, books);
+        } else if (cmp > 0) {
+            listBooksByHeadquarters(node.right, headquartersName, books);
+        } else {
+            // La sede coincide, agregar el libro a la lista
+            books.add(book);
+            listBooksByHeadquarters(node.left, headquartersName, books);
+            listBooksByHeadquarters(node.right, headquartersName, books);
+        }
+    }
+}
 }
