@@ -1,0 +1,2 @@
+Libro 1;1234567890;Volumen 1;Editorial A;Tunja;Autor1 Apellido1;10
+Libro 2;9876543210;Volumen 2;Editorial B;Duitama;Autor2 Apellido2;8
