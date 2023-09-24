@@ -2,8 +2,6 @@
 
 Integrantes de Grupo:
 
-Nelson Fabian Moreno
-
 Brayan Fuquene
 
 David Santiago Cubillos
