@@ -5,26 +5,27 @@ import java.util.ArrayList;
 
 public class Book implements Comparable<Book> {
     private String title;
-    private String isbn;
+    private int isbn;
     private String volume;
     private String editorial;
     private Headquarters headquarters;
     private Author author;
 
-    public Book(String title, String isbn, String volume, String editorial, Headquarters headquarters, Author author) {
+    public Book(String title, int isbn, String volume, String editorial, Headquarters headquarters, Author author) {
         this.title = title;
         this.isbn = isbn;
         this.volume = volume;
         this.editorial = editorial;
         this.headquarters = headquarters;
         this.author = author;
+        this.copiesAvailable = copiesAvailable;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public String getIsbn() {
+    public int getIsbn() {
         return isbn;
     }
 
@@ -42,22 +43,24 @@ public class Book implements Comparable<Book> {
 
     public Author getAuthor() {
         return author;
+    } 
+    
+   public int getCopiesAvailable() {
+        return copiesAvailable;
     }
 
-    @Override
-    public int compareTo(Book otherBook) {
-        return this.title.compareTo(otherBook.title);
+    public void setCopiesAvailable(int copiesAvailable) {
+        this.copiesAvailable = copiesAvailable;
     }
 
-    @Override
-    public String toString() {
-        return "Book{" +
-                "title='" + title + '\'' +
-                ", isbn='" + isbn + '\'' +
-                ", volume='" + volume + '\'' +
-                ", editorial='" + editorial + '\'' +
-                ", headquarters=" + headquarters +
-                ", author=" + author +
-                '}';
+      @Override
+public int compareTo(Book otherBook) {
+    return this.isbn - otherBook.isbn;
+    }
+
+ public String toFileString() {
+        return String.format("%s;%d;%s;%s;%s;%s %s;%d",
+                title, isbn, volume, editorial, headquarters.getHeadquartersName(),
+                author.getFirstName(), author.getLastName(), copiesAvailable);
     }
 }
