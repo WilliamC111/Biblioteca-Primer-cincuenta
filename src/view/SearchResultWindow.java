@@ -1,8 +1,12 @@
 package view;
 
+import java.util.List;
+
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+
+import model.Book;
 
 public class SearchResultWindow extends JFrame {
     private JTextArea resultArea;
@@ -25,6 +29,12 @@ public class SearchResultWindow extends JFrame {
     public void displayResults(String results) {
         resultArea.setText(results);
     }
+
     public void displayResults(List<Book> foundBooks) {
-}
+        StringBuilder sb = new StringBuilder();
+        for (Book book : foundBooks) {
+            sb.append(book.toString()).append("\n");
+        }
+        resultArea.setText(sb.toString());
+    }    
 }
