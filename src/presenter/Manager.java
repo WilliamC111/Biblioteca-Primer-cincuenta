@@ -53,7 +53,7 @@ public class Manager implements ActionListener {
         }
         if (e.getSource() == principal.getBtnListar()) {
             String sede = (String) principal.getComboBox().getSelectedItem();
-            List<Book> booksInSede = listBooksByHeadquarters(sede);
+            List<Book> booksInSede = getBooksByHeadquarters(sede);
             new BookListWindow(booksInSede);
         }
     }
@@ -115,19 +115,86 @@ public class Manager implements ActionListener {
         }
     }
     private void searchBook() {
-        String query = JOptionPane.showInputDialog(principal,
-                "Ingrese el título, ISBN o deje en blanco para buscar todos los libros:");
-
-        if (query == null) {
-            return; // User clicked cancel
-        }
-
-        SearchResultWindow resultWindow = new SearchResultWindow("Resultado de la búsqueda");
-        resultWindow.displayResults(searchBooks(query));
-    }
-
+        String query = JOptionPane.showInputDialog(principal, "Ingrese el título del libro:");
     
-
+        if (query == null) {
+            return; // El usuario hizo clic en cancelar
+        }
+    
+        List<Book> foundBooks = searchBooks(query);
+        
+        if (foundBooks.isEmpty()) {
+            JOptionPane.showMessageDialog(principal, "No se encontraron libros con el título: " + query);
+        } else {
+           
+            SearchResultWindow resultWindow = new SearchResultWindow("Resultado de la búsqueda");
+            resultWindow.displayResults(foundBooks);
+        }
+    }
+    
+    private List<Book> searchBooks(String query) {
+        List<Book> foundBooks = new ArrayList<>();
+    
+        try (BufferedReader reader = new BufferedReader(new FileReader(BOOKS_FILE_PATH))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] bookData = line.split(";");
+                if (bookData.length == 7) {
+                    String title = bookData[0].toLowerCase();
+    
+                    if (title.contains(query.toLowerCase())) {
+                        int isbn = Integer.parseInt(bookData[1]);
+                        String volume = bookData[2];
+                        String editorial = bookData[3];
+                        String bookSede = bookData[4];
+                        int copiesAvailable = Integer.parseInt(bookData[6]);
+    
+                        Headquarters headquarters = new Headquarters(bookSede);
+                        Author author = new Author(bookData[5], bookData[6], "");
+    
+                        Book book = new Book(title, isbn, volume, editorial, headquarters, author, copiesAvailable);
+                        foundBooks.add(book);
+                    }
+                }
+            }
+        } catch (IOException | NumberFormatException e) {
+            JOptionPane.showMessageDialog(principal, "Error al cargar libros desde el archivo: " + e.getMessage());
+        }
+    
+        return foundBooks;
+    }
+    private List<Book> getBooksByHeadquarters(String sede) {
+        List<Book> booksInHeadquarters = new ArrayList<>();
+    
+        try (BufferedReader reader = new BufferedReader(new FileReader(BOOKS_FILE_PATH))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] bookData = line.split(";");
+                if (bookData.length == 7) {
+                    String title = bookData[0];
+                    int isbn = Integer.parseInt(bookData[1]);
+                    String volume = bookData[2];
+                    String editorial = bookData[3];
+                    String bookSede = bookData[4]; 
+                    int copiesAvailable = Integer.parseInt(bookData[6]);
+    
+                   
+                    Headquarters headquarters = new Headquarters(bookSede);
+    
+                    
+                    Author author = new Author(bookData[5], bookData[6], "");
+    
+                    
+                    Book book = new Book(title, isbn, volume, editorial, headquarters, author, copiesAvailable);
+                    booksInHeadquarters.add(book);
+                }
+            }
+        } catch (IOException | NumberFormatException e) {
+            JOptionPane.showMessageDialog(principal, "Error al cargar libros desde el archivo: " + e.getMessage());
+        }
+    
+        return booksInHeadquarters;
+    }
     private void deleteBook(int isbn) {
         Book bookToDelete = bookTree.searchByISBN(isbn);
         if (bookToDelete != null) {
@@ -136,52 +203,8 @@ public class Manager implements ActionListener {
             JOptionPane.showMessageDialog(principal, "No se encontró el libro a eliminar.");
         }
     }
-
-    private List<Book> listBooksByHeadquarters(String sede) {
-        List<Book> booksInHeadquarters = new ArrayList<>();
-        bookTree.inOrderTraversal(book -> {
-            if (book.getHeadquarters().getHeadquartersName().equals(sede)) {
-                booksInHeadquarters.add(book);
-            }
-        });
-        return booksInHeadquarters;
-    }
     
-    private String searchBooks(String query) {
-        StringBuilder result = new StringBuilder();
-    
-        bookTree.inOrderTraversal(book -> {
-            String title = book.getTitle().toLowerCase();
-            String isbn = String.valueOf(book.getIsbn());
-    
-            if (title.contains(query.toLowerCase()) || isbn.equals(query)) {
-                result.append("Libro: ").append(book.getTitle()).append("\n");
-                result.append("ISBN: ").append(book.getIsbn()).append("\n");
-                result.append("Copias disponibles en cada sede:\n");
-    
-                Headquarters headquarters = book.getHeadquarters();
-    
-                // Check if the book is in the current headquarters using the AVL tree
-                Book searchResult = bookTree.search(book);
-                if (searchResult != null && searchResult.getHeadquarters().equals(headquarters)) {
-                    result.append("- ").append(headquarters.getHeadquartersName()).append(": ")
-                            .append(searchResult.getCopiesAvailable()).append(" copias\n");
-                }
-    
-                result.append("\n");
-            }
-        });
-    
-        return result.toString();
-    }
-    private void displayBooks(List<Book> books) {
-        StringBuilder displayText = new StringBuilder();
-        for (Book book : books) {
-            displayText.append(book.toString()).append(", Copies Available: ").append(book.getCopiesAvailable()).append("\n");
-        }
-        principal.updateLabelText(displayText.toString());
-    }
-
+   
     private void createTree() {
         bookTree = new AVLTree<>();
     }
@@ -206,8 +229,11 @@ public class Manager implements ActionListener {
         bookTree.insert(book);
     }
 
+    
+
     public static void main(String[] args) {
         Manager manager = new Manager();
 
     }
 }
+
